@@ -41,14 +41,21 @@ export default async function handler(req, res) {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.FROM_EMAIL;
-  const organizerEmail = process.env.ORGANIZER_EMAIL;
-  const herEmail = process.env.HER_EMAIL;
+const fromEmail = process.env.FROM_EMAIL;
+const organizerEmail = process.env.ORGANIZER_EMAIL;
+const herEmail = process.env.HER_EMAIL;
 
-  if (!apiKey || !fromEmail || !organizerEmail) {
-    console.error("Email env vars not configured");
-    return res.status(200).json({ ok: true, emailed: false, reason: "Email not configured" });
-  }
+console.log("DEBUG env check:", {
+  hasApiKey: Boolean(apiKey),
+  hasFromEmail: Boolean(fromEmail),
+  hasOrganizerEmail: Boolean(organizerEmail),
+  hasHerEmail: Boolean(herEmail),
+});
+
+if (!apiKey || !fromEmail || !organizerEmail) {
+  console.error("Email env vars not configured");
+  return res.status(200).json({ ok: true, emailed: false, reason: "Email not configured" });
+}
 
   const resend = new Resend(apiKey);
   const results = { organizer: false, her: false };
