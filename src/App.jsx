@@ -24,7 +24,7 @@ export default function App() {
       <Scenery />
       {showBadge && <MessageBadge onClick={() => setShowNote(true)} />}
 
-      <div style={{ position: "relative", zIndex: 2, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div className="content-area" style={{ position: "relative", zIndex: 2 }}>
         {!showNote && step !== "ask" && step !== "yay" && (
           <div className="progress-dots">
             {STEPS.slice(2).map((s, i) => (
