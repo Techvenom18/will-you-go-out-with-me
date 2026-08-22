@@ -19,10 +19,14 @@ export async function sendEmail({ from, to, subject, html }) {
     }),
   });
 
+  const responseText = await response.text();
+  console.log("BREVO RAW RESPONSE:", response.status, responseText);
+
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Brevo send failed (${response.status}): ${errorText}`);
+    throw new Error(`Brevo send failed (${response.status}): ${responseText}`);
   }
+
+  return JSON.parse(responseText);
 
   return response.json();
 }
