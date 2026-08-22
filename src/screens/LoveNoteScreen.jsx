@@ -12,7 +12,7 @@ export default function LoveNoteScreen({ onClose }) {
           <p key={i}>{line}</p>
         ))}
         <p className="love-note-signoff">
-          xoxo,
+          Yours,
           <br />
           {CONFIG.yourName}
         </p>
