@@ -7,11 +7,11 @@ export const CONFIG = {
   herName: "Shagun",
 
   // Your name, shown at the very end
-  yourName: "Suprise Planer(S)",
+  yourName: "Suprise Planner(S)",
 
   // The activities she can choose from on step 3.
   activities: [
-    "Dinner Date",
+    "Lunch Date",
     "Movie Date",
     "Coffee & Walk Date",
     "Picnic Date",
