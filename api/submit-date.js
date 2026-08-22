@@ -52,13 +52,6 @@ console.log("DEBUG env check:", {
   hasHerEmail: Boolean(herEmail),
 });
 
-console.log("DEBUG env check:", {
-  testVar: process.env.TEST_VAR,
-  hasApiKey: Boolean(apiKey),
-  hasFromEmail: Boolean(fromEmail),
-  hasOrganizerEmail: Boolean(organizerEmail),
-  hasHerEmail: Boolean(herEmail),
-});
 
 if (!apiKey || !fromEmail || !organizerEmail) {
   console.error("Email env vars not configured");
