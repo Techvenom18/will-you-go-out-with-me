@@ -7,6 +7,7 @@ import DateScreen from "./screens/DateScreen";
 import ActivityScreen from "./screens/ActivityScreen";
 import ConfirmScreen from "./screens/ConfirmScreen";
 import LoveNoteScreen from "./screens/LoveNoteScreen";
+import Footer from "./components/Footer";
 
 const STEPS = ["ask", "yay", "date", "activity", "confirm"];
 
@@ -64,6 +65,8 @@ export default function App() {
           </>
         )}
       </div>
+
+      <Footer />
     </div>
   );
 }
