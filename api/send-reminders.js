@@ -1,5 +1,5 @@
 import { kv } from "./_kv.js";
-import { Resend } from "resend";
+import { sendEmail } from "./_brevo.js";
 import { dayBeforeReminderEmail, dayOfReminderEmail } from "./_email-templates.js";
 
 function todayISO() {
@@ -22,14 +22,13 @@ export default async function handler(req, res) {
   }
 
   const herEmail = process.env.HER_EMAIL;
-  const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.FROM_EMAIL;
   const names = {
     herName: process.env.HER_NAME || "her",
     yourName: process.env.YOUR_NAME || "you",
   };
 
-  if (!herEmail || !apiKey || !fromEmail) {
+  if (!herEmail || !process.env.BREVO_API_KEY || !fromEmail) {
     return res.status(200).json({ ok: true, skipped: "email not fully configured" });
   }
   if (!kv) {
@@ -48,19 +47,18 @@ export default async function handler(req, res) {
 
   const today = todayISO();
   const tomorrow = addDays(today, 1);
-  const resend = new Resend(apiKey);
   const sent = [];
 
   if (plan.date === tomorrow && !plan.reminded_day_before) {
     const { subject, html } = dayBeforeReminderEmail(plan, names);
-    await resend.emails.send({ from: fromEmail, to: herEmail, subject, html });
+    await sendEmail({ from: fromEmail, to: herEmail, subject, html });
     plan.reminded_day_before = true;
     sent.push("day_before");
   }
 
   if (plan.date === today && !plan.reminded_day_of) {
     const { subject, html } = dayOfReminderEmail(plan, names);
-    await resend.emails.send({ from: fromEmail, to: herEmail, subject, html });
+    await sendEmail({ from: fromEmail, to: herEmail, subject, html });
     plan.reminded_day_of = true;
     sent.push("day_of");
   }

@@ -1,5 +1,5 @@
 import { kv } from "./_kv.js";
-import { Resend } from "resend";
+import { sendEmail } from "./_brevo.js";
 import { organizerNotificationEmail, herConfirmationEmail } from "./_email-templates.js";
 
 export default async function handler(req, res) {
@@ -40,30 +40,20 @@ export default async function handler(req, res) {
     console.warn("KV not configured — reminder emails will not be scheduled.");
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-const fromEmail = process.env.FROM_EMAIL;
-const organizerEmail = process.env.ORGANIZER_EMAIL;
-const herEmail = process.env.HER_EMAIL;
+  const fromEmail = process.env.FROM_EMAIL;
+  const organizerEmail = process.env.ORGANIZER_EMAIL;
+  const herEmail = process.env.HER_EMAIL;
 
-console.log("DEBUG env check:", {
-  hasApiKey: Boolean(apiKey),
-  hasFromEmail: Boolean(fromEmail),
-  hasOrganizerEmail: Boolean(organizerEmail),
-  hasHerEmail: Boolean(herEmail),
-});
+  if (!process.env.BREVO_API_KEY || !fromEmail || !organizerEmail) {
+    console.error("Email env vars not configured");
+    return res.status(200).json({ ok: true, emailed: false, reason: "Email not configured" });
+  }
 
-
-if (!apiKey || !fromEmail || !organizerEmail) {
-  console.error("Email env vars not configured");
-  return res.status(200).json({ ok: true, emailed: false, reason: "Email not configured" });
-}
-
-  const resend = new Resend(apiKey);
   const results = { organizer: false, her: false };
 
   try {
     const { subject, html } = organizerNotificationEmail(plan, names);
-    await resend.emails.send({ from: fromEmail, to: organizerEmail, subject, html });
+    await sendEmail({ from: fromEmail, to: organizerEmail, subject, html });
     results.organizer = true;
   } catch (err) {
     console.error("Failed to email organizer:", err);
@@ -72,7 +62,7 @@ if (!apiKey || !fromEmail || !organizerEmail) {
   if (herEmail) {
     try {
       const { subject, html } = herConfirmationEmail(plan, names);
-      await resend.emails.send({ from: fromEmail, to: herEmail, subject, html });
+      await sendEmail({ from: fromEmail, to: herEmail, subject, html });
       results.her = true;
     } catch (err) {
       console.error("Failed to email her confirmation:", err);
