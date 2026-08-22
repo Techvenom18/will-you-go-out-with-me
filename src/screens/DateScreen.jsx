@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CatSolo from "../components/CatSolo";
+import catGif from "../assets/page3pick-date.gif";
 
 const FIXED_PLACE = "To Be Decided";
 
@@ -13,7 +14,7 @@ export default function DateScreen({ value, onContinue }) {
   return (
     <div className="card">
       <div className="portrait-frame">
-        <CatSolo mood="happy" />
+          <img src={catGif} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
       </div>
       <h1 className="pixel-title">Pick a Date</h1>
       <p className="subtext">Choose the day &amp; time for our little plan.</p>
